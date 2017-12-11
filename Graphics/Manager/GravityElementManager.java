@@ -1,6 +1,7 @@
 package Manager;
 import java.util.ArrayList;
 
+import BaseCanvas.BaseCanvas;
 import Element.BaseElement;
 import Element.GravityElement;
 
@@ -18,13 +19,13 @@ public class GravityElementManager extends BaseElementManager{
 		maxSpeed=100;
 	}
 	
-	
 	public GravityElementManager() {
 		initialize();
 	}
 	
-	public GravityElementManager(ArrayList<BaseElement> elements){
-		super(elements);
+	
+	public GravityElementManager(ArrayList<BaseElement> elements,BaseCanvas context){
+		super(elements,context);
 		initialize();
 	}
 	

@@ -1,13 +1,15 @@
 package Manager;
 import java.util.ArrayList;
 
+import BaseCanvas.BaseCanvas;
 import Element.BaseElement;
 
 public abstract class BaseElementManager {
 	
 	//属性
-	private 		ArrayList<BaseElement>									elementList;				//元素列表
+	private 		ArrayList<BaseElement>							elementList;				//元素列表
 	private 		boolean 													isEnable;					//可用状态
+	private 		BaseCanvas	 							context;
 	
 	
 	
@@ -45,32 +47,52 @@ public abstract class BaseElementManager {
 	
 	
 	
+	//属性ProcessTime：只读
+	public long getProcessTime() {
+		if(context!=null) {
+			return context.getProcessTime();
+		}
+		return -1;
+	}
+	
+	
+	
+	
 	//初始化
-	protected void initialize(ArrayList<BaseElement>elements) {
+	protected void initialize(ArrayList<BaseElement>elements,BaseCanvas context) {
 		if(elements==null) {
 			setElementList(new ArrayList<>());
 		}else {
 			setElementList(elements);
 		}
-		
+		this.context=context;
 		isEnable=true;
 	}
 	
 	
 	
 	
-	
-	//创建一个基础的Manager对象，管理Element元素
+	//构造函数
 	public BaseElementManager() {
+		initialize(null, null);
+	}
+	//创建一个基础的Manager对象，管理Element元素
+	public BaseElementManager(BaseCanvas context) {
 		// TODO Auto-generated constructor stub
-		initialize(null);
+		initialize(null,context);
 	}
 	
-	public BaseElementManager(ArrayList<BaseElement>elements) {
-		initialize(elements);
+	public BaseElementManager(ArrayList<BaseElement>elements,BaseCanvas context) {
+		initialize(elements,context);
 	}
 	
 	
+	
+	
+	
+	
+	
+	//公用方法
 	//添加元素
 	public void addElement(BaseElement element) {
 		if(element!=null) {
