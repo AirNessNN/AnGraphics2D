@@ -43,11 +43,12 @@ public class BaseCanvas extends Canvas{
 	private boolean 													isEnable;
 	private boolean 													isRunning;
 	//FPS相关
-	private long 														exceptFPS;//预期FPS
-	private float 														fps;//当前FPS
-	private static long 												startTime;
-	private static long 												endTime;
-	private static long 												sleepTime;
+	private long 														exceptFPS=60;//预期FPS
+	private float 														fps=0;//当前FPS
+	private volatile long 											startTime=0;
+	private volatile long 											endTime=0;
+	private long 														sleepTime=0;
+	private Object														timeLocker;
 	
 	//碰撞相关
 	private boolean													isborderHit;//是否打开边界碰撞检测
@@ -216,8 +217,26 @@ public class BaseCanvas extends Canvas{
 	
 	
 	//让管理器获取到当前的刷新时间
-	public static long getProcessTime() {
-		return endTime-startTime;
+	private void setStartTime(long time) {
+		
+		synchronized (timeLocker) {
+			System.out.println("starttime:"+startTime);
+			startTime=time;
+		}
+	}
+	private void setEndTime(long time) {
+		synchronized (timeLocker) {
+			System.out.println("endtime:"+endTime);
+			endTime=time;
+		}
+	}
+	public long getProcessTime() {
+		synchronized (timeLocker) {
+			long time=System.currentTimeMillis();
+			System.out.println(time+" "+startTime);
+			System.out.println(time-startTime);
+			return time-startTime;
+		}
 	}
 	
 	
@@ -238,7 +257,7 @@ public class BaseCanvas extends Canvas{
 		exceptFPS=60;
 		sleepTime=16;
 		isRunning=false;
-		
+		timeLocker=new Object();
 		defaultColor=Color.LIGHT_GRAY;
 	}
 	
@@ -354,7 +373,7 @@ public class BaseCanvas extends Canvas{
 						break;
 					}
 					//检测FPS
-					startTime=System.currentTimeMillis();
+					setStartTime(System.currentTimeMillis());
 					if(I!=null) {
 						I.updatePerformed();
 					}
@@ -372,7 +391,7 @@ public class BaseCanvas extends Canvas{
 						e.printStackTrace();
 					}
 					//动态设置FPS
-					endTime=System.currentTimeMillis();
+					setEndTime(System.currentTimeMillis());
 					if(endTime-startTime==0) {
 						try {
 							fps=1000;

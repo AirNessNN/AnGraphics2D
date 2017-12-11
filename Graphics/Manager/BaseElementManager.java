@@ -9,7 +9,8 @@ public abstract class BaseElementManager {
 	//属性
 	private 		ArrayList<BaseElement>							elementList;				//元素列表
 	private 		boolean 													isEnable;					//可用状态
-	private 		BaseCanvas	 							context;
+	
+	private 		BaseCanvas	 											context;
 	
 	
 	
@@ -20,6 +21,17 @@ public abstract class BaseElementManager {
 	public boolean isEnable() {
 		return isEnable;
 	}
+	
+	
+	
+	
+	//属性Context：只读
+	public BaseCanvas getContext() {
+		return context;
+	}
+	/*public void setContext(BaseCanvas context) {
+		this.context = context;
+	}*/
 	
 	
 	
@@ -50,6 +62,7 @@ public abstract class BaseElementManager {
 	//属性ProcessTime：只读
 	public long getProcessTime() {
 		if(context!=null) {
+			//System.out.println(context.getProcessTime());
 			return context.getProcessTime();
 		}
 		return -1;

@@ -24,6 +24,12 @@ public class GravityElementManager extends BaseElementManager{
 	}
 	
 	
+	public GravityElementManager(BaseCanvas context) {
+		super(context);
+		initialize();
+	}
+	
+	
 	public GravityElementManager(ArrayList<BaseElement> elements,BaseCanvas context){
 		super(elements,context);
 		initialize();

@@ -2,6 +2,8 @@ package Element;
 
 import java.awt.image.BufferedImage;
 
+import Manager.GravityElementManager;
+
 public class GravityElement extends BaseElement{
 	
 	
@@ -12,9 +14,11 @@ public class GravityElement extends BaseElement{
 	//重力相关
 	private boolean 								isGravity=false;//是否接受重力控制
 	private boolean 								isDown=false;//是否在下坠
-	private int 										downTime=0;//下坠已经持续的时间
+	private long 									downTime=0;//下坠已经持续的时间
 	private boolean 								isOnFloor=false;//是否在地板上
 	private float 									gravitySpeed=0;//重力速度
+	
+	private GravityElementManager		context;
 	
 	
 	
@@ -36,11 +40,8 @@ public class GravityElement extends BaseElement{
 	}
 
 	//下落时间
-	public int getDownTime() {
+	public long getDownTime() {
 		return downTime;
-	}
-	public void downTimeAdd() {
-		downTime++;
 	}
 	public void setDownTime(int downTime) {
 		this.downTime=downTime;
@@ -66,14 +67,34 @@ public class GravityElement extends BaseElement{
 	
 	
 	
-	public GravityElement(int x, int y, int width, int height) {
+	
+	
+	public GravityElement(int x, int y, int width, int height,GravityElementManager context) {
 		super(x, y, width, height);
+		this.context=context;
 		// TODO Auto-generated constructor stub
 	}
 	
-	public GravityElement(BufferedImage image) {
+	public GravityElement(BufferedImage image,GravityElementManager context) {
 		// TODO Auto-generated constructor stub
 		super(image);
+		this.context=context;
+	}
+	
+	
+	
+	//下落时间处理
+	public void downTimeAdd() {
+		if(context!=null) {
+			//System.out.println(context.getProcessTime());
+			if(context.getProcessTime()<1) {
+				downTime++;
+			}else {
+				downTime+=context.getProcessTime();
+			}
+		}else {
+			downTime++;
+		}
 	}
 
 }

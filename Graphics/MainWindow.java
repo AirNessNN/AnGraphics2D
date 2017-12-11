@@ -27,8 +27,8 @@ public class MainWindow extends JFrame {
 	Dimension screen = tk.getScreenSize();
 
 	GravityElementManager GEM=null;
-	Player player=new Player(500, 0, 100, 300);
-	GravityElement element=new GravityElement(200, 0, 100, 100);
+	Player player=null;
+	GravityElement element=null;
 	HorizontalCanvas canvas ;
 	
 	
@@ -48,7 +48,7 @@ public class MainWindow extends JFrame {
 		setContentPane(jp);
 		setUndecorated(true);  
 		canvas=new HorizontalCanvas(this.getSize());
-		canvas.setExceptFPS(60);
+		canvas.setExceptFPS(30);
 		canvas.setLandingCheck(true);
 		//File file=new File("E:\\Desktop\\JavaÏîÄ¿\\GraphicsTest\\Graphics\\1.jpg");
 		jp.add(canvas);
@@ -65,7 +65,9 @@ public class MainWindow extends JFrame {
 				element.x+=10;*/
 			}
 		});
-		GEM=new GravityElementManager();
+		GEM=new GravityElementManager(canvas);
+		player=new Player(500, 0, 100, 300,GEM);
+		element=new GravityElement(200, 0, 100, 100,GEM);
 		GEM.addElement(player);
 		GEM.addElement(element);
 		player.setGravity(true);
@@ -80,6 +82,20 @@ public class MainWindow extends JFrame {
 				//GEM.update();
 			}
 		});
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
+		}).start();
 	}
 
 	public static void main(String[] args) {
