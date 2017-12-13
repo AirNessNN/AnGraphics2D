@@ -9,9 +9,11 @@ import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-import ActionPacket.BorderHitListener;
-import ActionPacket.ElementHitListener;
-import ActionPacket.UpdateListener;
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
+
+import AcitonListener.BorderHitListener;
+import AcitonListener.ElementHitListener;
+import AcitonListener.UpdateListener;
 import Element.BaseElement;
 import Element.GravityElement;
 import Manager.BaseElementManager;
@@ -220,21 +222,19 @@ public class BaseCanvas extends Canvas{
 	private void setStartTime(long time) {
 		
 		synchronized (timeLocker) {
-			System.out.println("starttime:"+startTime);
+			//System.out.println("starttime:"+startTime);
 			startTime=time;
 		}
 	}
 	private void setEndTime(long time) {
 		synchronized (timeLocker) {
-			System.out.println("endtime:"+endTime);
+			//System.out.println("endtime:"+endTime);
 			endTime=time;
 		}
 	}
 	public long getProcessTime() {
 		synchronized (timeLocker) {
 			long time=System.currentTimeMillis();
-			System.out.println(time+" "+startTime);
-			System.out.println(time-startTime);
 			return time-startTime;
 		}
 	}
@@ -361,6 +361,7 @@ public class BaseCanvas extends Canvas{
 		}
 		new Thread(new Runnable() {
 			
+
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
@@ -374,6 +375,14 @@ public class BaseCanvas extends Canvas{
 					}
 					//ºÏ≤‚FPS
 					setStartTime(System.currentTimeMillis());
+					try {
+						Thread.sleep(sleepTime);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					//System.out.println(startTime);
+					//time1=System.currentTimeMillis();
 					if(I!=null) {
 						I.updatePerformed();
 					}
@@ -383,13 +392,9 @@ public class BaseCanvas extends Canvas{
 					}
 					//÷ÿªÊ∆¡ƒª
 					repaint();
+					//System.out.println("starttime2 "+startTime);
 					
-					try {
-						Thread.sleep(sleepTime);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+					
 					//∂ØÃ¨…Ë÷√FPS
 					setEndTime(System.currentTimeMillis());
 					if(endTime-startTime==0) {

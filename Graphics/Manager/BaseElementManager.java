@@ -65,7 +65,7 @@ public abstract class BaseElementManager {
 			//System.out.println(context.getProcessTime());
 			return context.getProcessTime();
 		}
-		return -1;
+		return -1;                              
 	}
 	
 	
@@ -73,7 +73,7 @@ public abstract class BaseElementManager {
 	
 	//≥ı ºªØ
 	protected void initialize(ArrayList<BaseElement>elements,BaseCanvas context) {
-		if(elements==null) {
+		if(elements==null) {                                                     
 			setElementList(new ArrayList<>());
 		}else {
 			setElementList(elements);

@@ -4,12 +4,15 @@ import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
+
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.xml.crypto.Data;
 
-import ActionPacket.BorderHitListener;
-import ActionPacket.UpdateListener;
+import AcitonListener.BorderHitListener;
+import AcitonListener.UpdateListener;
 import BaseCanvas.HorizontalCanvas;
 import Element.BaseElement;
 import Element.GravityElement;
@@ -37,6 +40,7 @@ public class MainWindow extends JFrame {
 	protected int preX;
 	protected int preY;
 	boolean up,down,left,right;
+	long start,end;
 	
 
 	public MainWindow() {
@@ -48,7 +52,7 @@ public class MainWindow extends JFrame {
 		setContentPane(jp);
 		setUndecorated(true);  
 		canvas=new HorizontalCanvas(this.getSize());
-		canvas.setExceptFPS(30);
+		canvas.setExceptFPS(60);
 		canvas.setLandingCheck(true);
 		//File file=new File("E:\\Desktop\\JavaÏîÄ¿\\GraphicsTest\\Graphics\\1.jpg");
 		jp.add(canvas);
@@ -57,12 +61,15 @@ public class MainWindow extends JFrame {
 			@Override
 			public void onHit(BaseElement element,int model) {
 				// TODO Auto-generated method stub
-				/*GravityElement element2=(GravityElement)element;
-				element2.y=getHeight()-element2.getHeight();*/
-				//element2.setOnFloor(true);
+				GravityElement element2=(GravityElement)element;
+				element2.y=getHeight()-element2.getHeight();
+				element2.setOnFloor(true);
 				
 				/*element.y=0;
 				element.x+=10;*/
+				end=System.currentTimeMillis();
+				System.out.println(end-start);
+				
 			}
 		});
 		GEM=new GravityElementManager(canvas);
@@ -82,20 +89,7 @@ public class MainWindow extends JFrame {
 				//GEM.update();
 			}
 		});
-		new Thread(new Runnable() {
-			
-			@Override
-			public void run() {
-				// TODO Auto-generated method stub
-				try {
-					Thread.sleep(500);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
-			}
-		}).start();
+		start=System.currentTimeMillis();
 	}
 
 	public static void main(String[] args) {

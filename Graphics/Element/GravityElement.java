@@ -84,17 +84,13 @@ public class GravityElement extends BaseElement{
 	
 	
 	//下落时间处理
-	public void downTimeAdd() {
-		if(context!=null) {
-			//System.out.println(context.getProcessTime());
-			if(context.getProcessTime()<1) {
-				downTime++;
-			}else {
-				downTime+=context.getProcessTime();
-			}
-		}else {
+	public void downTimeAdd(long time) {
+		if(time<1) {
 			downTime++;
+		}else {
+			downTime+=time;
 		}
 	}
+	
 
 }

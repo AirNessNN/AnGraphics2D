@@ -15,7 +15,7 @@ public class GravityElementManager extends BaseElementManager{
 	
 	
 	private void initialize() {
-		gravity=(float)0.4;
+		gravity=(float)0.1;
 		maxSpeed=100;
 	}
 	
@@ -44,7 +44,7 @@ public class GravityElementManager extends BaseElementManager{
 	 * @param g 重力系数在0.1到10.0之间的浮点数
 	 */
 	public void setGravityValue(float g) {
-		if(g>0.1&&g<10.0){
+		if(g>0.05&&g<10.0){
 			gravity=g;
 		}
 	}
@@ -72,7 +72,7 @@ public class GravityElementManager extends BaseElementManager{
 					element.setGravitySpeed(maxSpeed);
 				}else{
 					element.setGravitySpeed(gravity*element.getDownTime());
-					element.downTimeAdd();
+					element.downTimeAdd(getProcessTime());
 				}
 				h=(int)(element.getGravitySpeed()+(gravity*element.getDownTime()));
 				element.y+=h;
