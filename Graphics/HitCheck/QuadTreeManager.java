@@ -51,9 +51,14 @@ public class QuadTreeManager {
 	
 	
 	
-	public void insert(BaseElement element) {
+	
+	public BaseElement[] getElements(Rectangle rectangle) {
 		
+		
+		
+		return null;
 	}
+	
 	
 	
 	

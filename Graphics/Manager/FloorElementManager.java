@@ -13,7 +13,7 @@ public class FloorElementManager extends BaseElementManager{
 	@Override
 	public void update() {
 		// TODO Auto-generated method stub
-		for(BaseElement e:getElementList()) {
+		for(BaseElement e:getElements()) {
 			
 		}
 		

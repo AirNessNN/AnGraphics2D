@@ -6,16 +6,24 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+
+import javax.swing.JFrame;
 
 import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 
 import AcitonListener.BorderHitListener;
 import AcitonListener.ElementHitListener;
+import AcitonListener.MouseActionListener;
 import AcitonListener.UpdateListener;
 import Element.BaseElement;
 import Element.GravityElement;
+import HitCheck.QuadTreeManager;
 import Manager.BaseElementManager;
 
 public class BaseCanvas extends Canvas{
@@ -36,7 +44,9 @@ public class BaseCanvas extends Canvas{
 	 */
 	private ArrayList<BaseElementManager>			elementManagers;//元素管理器
 	private ArrayList<BaseElement>							wall;//属于背景墙的元素
+	private ArrayList<BaseElement>							allElements;
 	//属性
+	private JFrame														context;
 	private BufferedImage 										backgroundImage;//背景
 	private Color 														defaultColor;//背景颜色
 	private Dimension 												backgroundSize;//背景大小
@@ -55,15 +65,97 @@ public class BaseCanvas extends Canvas{
 	//碰撞相关
 	private boolean													isborderHit;//是否打开边界碰撞检测
 	private boolean													isElementHit;//是否打开元素碰撞检测
-	//相机
+	//相机相关
 	private Point														cameraLocation;//相机位置
 	private boolean													isSmoothMove;//相机平滑移动开关
 	private BaseElement											cameraLockObject;//相机锁定的对象
+	//鼠标相关
+	private boolean													isMouseListening=false;
+	private int															mouseKey;
+	private boolean													isMousePress;
+	public static final int											MOUSE_LEFT_BUTTON=1;
+	public static final int 											MOUSE_WHEEL=2;
+	public static final int											MOUSE_RIGHT_BUTTON=3;
+	private int 															wheelMoveValue;
+	private boolean													mouseVisable=true;
 	
-	
-	
+	//监听事件
+	public MouseActionListener									mouseActionListener;
 	public BorderHitListener 										borderhitListener;
 	public ElementHitListener									elementHitListener;
+	
+	
+	private QuadTreeManager									quadTreeManager;//四叉树管理器
+	
+	
+	
+	
+	
+	
+	
+	
+	//窗口的鼠标监听事件
+	private MouseListener mouseListener=new MouseListener() {
+		
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			// TODO Auto-generated method stub
+			mouseKey=e.getButton();
+			
+		}
+		
+		@Override
+		public void mousePressed(MouseEvent e) {
+			// TODO Auto-generated method stub
+			mouseKey=e.getButton();
+			
+		}
+		
+		@Override
+		public void mouseExited(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			// TODO Auto-generated method stub
+		}
+	};
+	//键盘监听
+	private KeyListener keyListener=new KeyListener() {
+		
+		@Override
+		public void keyTyped(KeyEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+		@Override
+		public void keyReleased(KeyEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+		@Override
+		public void keyPressed(KeyEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+	};
+
+
+
+
+
+
+	
 	
 	
 	
@@ -180,6 +272,14 @@ public class BaseCanvas extends Canvas{
 		this.exceptFPS = exceptFPS;
 		sleepTime=1000/exceptFPS;
 	}
+	
+	
+	
+	
+	
+	public double getFPS() {
+		return fps;
+	}
 
 
 
@@ -259,6 +359,8 @@ public class BaseCanvas extends Canvas{
 		isRunning=false;
 		timeLocker=new Object();
 		defaultColor=Color.LIGHT_GRAY;
+		allElements=new ArrayList<>();
+		quadTreeManager=new QuadTreeManager(getBounds(), allElements);
 	}
 	
 	
@@ -269,17 +371,18 @@ public class BaseCanvas extends Canvas{
 	/*
 	 * 构造方法
 	 */
-	public BaseCanvas(Dimension size) {
+	public BaseCanvas(JFrame context,Dimension size) {
 		// TODO Auto-generated constructor stub
 		if(size==null) {
 			size=new Dimension(500, 500);
 		}
 		this.setSize(size);
 		this.canvasSize=size;
+		this.context=context;
 		initialize();
 	}
 	
-	public BaseCanvas(int width,int height) {
+	public BaseCanvas(JFrame context,int width,int height) {
 		if(width<0) {
 			width=0;
 		}
@@ -288,6 +391,7 @@ public class BaseCanvas extends Canvas{
 		}
 		this.setSize(width, height);
 		this.canvasSize=new Dimension(width, height);
+		this.context=context;
 		initialize();
 	}
 	
@@ -306,6 +410,7 @@ public class BaseCanvas extends Canvas{
 	public void addManager(BaseElementManager manager) {
 		if(manager!=null) {
 			this.elementManagers.add(manager);
+			allElements.addAll(manager.getElements());
 		}
 	}
 	
@@ -353,7 +458,7 @@ public class BaseCanvas extends Canvas{
 	
 	
 	/*
-	 * 计算线程控制
+	 * 帧计算线程
 	 */
 	public void startUpdate(UpdateListener I) {
 		if(isRunning) {
@@ -366,6 +471,7 @@ public class BaseCanvas extends Canvas{
 			public void run() {
 				// TODO Auto-generated method stub
 				isRunning=true;
+				quadTreeManager.buildTree();
 				while(isRunning) {
 					if(!isEnable) {
 						continue;
@@ -381,10 +487,12 @@ public class BaseCanvas extends Canvas{
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					//System.out.println(startTime);
-					//time1=System.currentTimeMillis();
 					if(I!=null) {
 						I.updatePerformed();
+					}
+					//检查鼠标事件
+					if(isMouseListening) {
+						
 					}
 					//update元素
 					for(BaseElementManager m:elementManagers) {
@@ -392,8 +500,6 @@ public class BaseCanvas extends Canvas{
 					}
 					//重绘屏幕
 					repaint();
-					//System.out.println("starttime2 "+startTime);
-					
 					
 					//动态设置FPS
 					setEndTime(System.currentTimeMillis());
@@ -434,6 +540,46 @@ public class BaseCanvas extends Canvas{
 	
 	
 	
+	//设置主窗口的鼠标监听事件
+	public void setMouseListener() {
+		//System.out.println(isMouseListening);
+		if(!isMouseListening) {
+			this.addMouseListener(mouseListener);
+		}
+		isMouseListening=true;
+		
+	}
+	//移除窗口的鼠标监听
+	public void removeMouseListener() {
+		if(!isMouseListening) {
+			return;
+		}
+		isMouseListening=false;
+		if(context!=null) {
+			this.removeMouseListener(mouseListener);
+		}
+	}
+	
+	
+	
+	
+	
+	//设置主窗口的键盘监听事件
+	public void setKeyboardListener() {
+		if(context!=null) {
+			addKeyListener(keyListener);
+		}
+	}
+	public void removeKeyboardListener() {
+		if(context!=null) {
+			removeKeyListener(keyListener);
+		}
+	}
+	
+	
+	
+	
+	
 	
 	/*
 	 * 绘制：重写方法
@@ -461,7 +607,7 @@ public class BaseCanvas extends Canvas{
 		//绘画元素
 		if(elementManagers!=null&&elementManagers.size()>0) {
 			for(BaseElementManager manager:elementManagers) {
-				for(BaseElement element:manager.getElementList()) {
+				for(BaseElement element:manager.getElements()) {
 					//边框碰撞
 					if(isborderHit) {
 						if(element.x<0) {
@@ -498,6 +644,12 @@ public class BaseCanvas extends Canvas{
 		g2d.dispose();
 		//填充画布
 		g.drawImage(bufferedImage, 0, 0, null);
+	}
+	public JFrame getContext() {
+		return context;
+	}
+	public void setContext(JFrame context) {
+		this.context = context;
 	}
 	
 	

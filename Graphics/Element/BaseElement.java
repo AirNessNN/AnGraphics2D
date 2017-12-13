@@ -30,6 +30,8 @@ public abstract class BaseElement {
 	/**是否背景元素*/
 	private boolean 								isBackgroundElement=false;
 	
+	private int										coveage=1;
+	
 	private String									tag;
 	
 	private BufferedImage						image;
@@ -39,7 +41,7 @@ public abstract class BaseElement {
 	public int 										hitModel=0;
 	
 	//移动
-	private int 										speed=0;//标准刷新率下，单位帧移动的距离 
+	private int 										speed=0;//60帧下（16ms）内移动的距离
 	
 	
 	
@@ -50,6 +52,21 @@ public abstract class BaseElement {
 	
 	
 	
+	//图层
+	public int getCoveage() {
+		return coveage;
+	}
+	public void setCoveage(int coveage) {
+		if(coveage<1) {
+			this.coveage=1;
+			return;
+		}
+		if(coveage>100) {
+			this.coveage=100;
+			return;
+		}
+		this.coveage = coveage;
+	}
 	
 	//速度属性
 	public int getSpeed() {

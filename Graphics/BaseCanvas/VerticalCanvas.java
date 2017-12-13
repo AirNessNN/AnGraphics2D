@@ -7,6 +7,8 @@ import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+import javax.swing.JFrame;
+
 import Element.BaseElement;
 import Element.GravityElement;
 import Manager.BaseElementManager;
@@ -64,13 +66,13 @@ public class VerticalCanvas extends BaseCanvas{
 	
 	
 	
-	public VerticalCanvas(int width, int height) {
-		super(width, height);
+	public VerticalCanvas(JFrame context,int width, int height) {
+		super(context,width, height);
 		
 		// TODO Auto-generated constructor stub
 	}
-	public VerticalCanvas(Dimension size) {
-		super(size);
+	public VerticalCanvas(JFrame context,Dimension size) {
+		super(context,size);
 		// TODO Auto-generated constructor stub
 		this.cameraPosition=new Point(0, 0);
 	}
@@ -111,7 +113,7 @@ public class VerticalCanvas extends BaseCanvas{
 		//»æ»­ÔªËØ
 		if(getElementManagers()!=null&&getElementManagers().size()>0) {
 			for(BaseElementManager manager:getElementManagers()) {
-				for(BaseElement element:manager.getElementList()) {
+				for(BaseElement element:manager.getElements()) {
 					//µØÃæÍ£Áô¼ì²â
 					
 					//ÔªËØÅö×²

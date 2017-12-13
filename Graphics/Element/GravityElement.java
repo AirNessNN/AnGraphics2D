@@ -14,9 +14,9 @@ public class GravityElement extends BaseElement{
 	//重力相关
 	private boolean 								isGravity=false;//是否接受重力控制
 	private boolean 								isDown=false;//是否在下坠
-	private long 									downTime=0;//下坠已经持续的时间
+	private double 								downTime=0;//下坠已经持续的时间
 	private boolean 								isOnFloor=false;//是否在地板上
-	private float 									gravitySpeed=0;//重力速度
+	private double 								gravitySpeed=0;//重力速度
 	
 	private GravityElementManager		context;
 	
@@ -40,7 +40,7 @@ public class GravityElement extends BaseElement{
 	}
 
 	//下落时间
-	public long getDownTime() {
+	public double getDownTime() {
 		return downTime;
 	}
 	public void setDownTime(int downTime) {
@@ -56,11 +56,12 @@ public class GravityElement extends BaseElement{
 	}
 
 
-	public float getGravitySpeed() {
+	public double getGravitySpeed() {
 		return gravitySpeed;
 	}
-	public void setGravitySpeed(float value) {
-		gravitySpeed=value;
+	public void setGravitySpeed(double value) {
+		gravitySpeed=value/100;
+		//System.out.println(context.getCanvasFPS());
 	}
 	
 	
@@ -86,7 +87,7 @@ public class GravityElement extends BaseElement{
 	//下落时间处理
 	public void downTimeAdd(long time) {
 		if(time<1) {
-			downTime++;
+			downTime+=0.1;
 		}else {
 			downTime+=time;
 		}

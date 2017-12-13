@@ -1,6 +1,9 @@
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Toolkit;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -17,6 +20,7 @@ import BaseCanvas.HorizontalCanvas;
 import Element.BaseElement;
 import Element.GravityElement;
 import Manager.GravityElementManager;
+import Window.BaseWindow;
 
 public class MainWindow extends JFrame {
 
@@ -44,18 +48,15 @@ public class MainWindow extends JFrame {
 	
 
 	public MainWindow() {
-		// TODO Auto-generated constructor stub
 		setSize(1000,800);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		JPanel jp=new JPanel();
-		setContentPane(jp);
-		setUndecorated(true);  
-		canvas=new HorizontalCanvas(this.getSize());
+		setUndecorated(true);
+		canvas=new HorizontalCanvas(this,this.getSize());
 		canvas.setExceptFPS(60);
 		canvas.setLandingCheck(true);
 		//File file=new File("E:\\Desktop\\JavaÏîÄ¿\\GraphicsTest\\Graphics\\1.jpg");
-		jp.add(canvas);
+		getContentPane().add(canvas);
 		canvas.setIsborderHit(new BorderHitListener() {
 			
 			@Override
@@ -69,7 +70,6 @@ public class MainWindow extends JFrame {
 				element.x+=10;*/
 				end=System.currentTimeMillis();
 				System.out.println(end-start);
-				
 			}
 		});
 		GEM=new GravityElementManager(canvas);
@@ -81,22 +81,21 @@ public class MainWindow extends JFrame {
 		element.setGravity(true);
 		
 		canvas.addManager(GEM);
-		canvas.startUpdate(new UpdateListener() {
-			
-			@Override
-			public void updatePerformed() {
-				// TODO Auto-generated method stub
-				//GEM.update();
-			}
-		});
+		canvas.startUpdate(null);
 		start=System.currentTimeMillis();
+		
 	}
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				new MainWindow().setVisible(true);
+				/*MainWindow mainWindow=new MainWindow();
+				mainWindow.canvas.setMouseListener();
+				//mainWindow.canvas.removeMouseListener();
+				mainWindow.setVisible(true);*/
+				//new BaseWindow().setVisible(true);
+				new TestWindow().setVisible(true);
 			}
 		});
 	}

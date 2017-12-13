@@ -9,8 +9,33 @@ public abstract class BaseElementManager {
 	//属性
 	private 		ArrayList<BaseElement>							elementList;				//元素列表
 	private 		boolean 													isEnable;					//可用状态
+	private 		int 															maxCoverage=1;//最大图层数
 	
 	private 		BaseCanvas	 											context;
+	
+	
+	
+	
+	
+	
+	
+	//属性maxCoverage：读写
+	public int getMaxCoverage() {
+		return maxCoverage;
+	}
+	public void setMaxCoverage(int maxCoverage) {
+		if(maxCoverage<1) {
+			this.maxCoverage=1;
+			return;
+		}
+		if(maxCoverage>100) {
+			this.maxCoverage=100;
+			return;
+		}
+		this.maxCoverage = maxCoverage;
+	}
+	
+	
 	
 	
 	
@@ -38,8 +63,8 @@ public abstract class BaseElementManager {
 	
 	//属性elementList：只读
 	public ArrayList<BaseElement>getElements(){
-		if(getElementList()!=null) {
-			return getElementList();
+		if(elementList!=null) {
+			return elementList;
 		}
 		return null;
 	}
@@ -50,8 +75,8 @@ public abstract class BaseElementManager {
 	
 	//属性Size：只读
 	public int getSize() {
-		if(getElementList()!=null) {
-			return getElementList().size();
+		if(getElements()!=null) {
+			return getElements().size();
 		}
 		return 0;
 	}
@@ -62,10 +87,20 @@ public abstract class BaseElementManager {
 	//属性ProcessTime：只读
 	public long getProcessTime() {
 		if(context!=null) {
-			//System.out.println(context.getProcessTime());
 			return context.getProcessTime();
 		}
 		return -1;                              
+	}
+	
+	
+	
+	
+	//属性Context.FPS：只读
+	public double getCanvasFPS() {
+		if(context!=null) {
+			return context.getFPS();
+		}
+		return -1;
 	}
 	
 	
@@ -109,28 +144,28 @@ public abstract class BaseElementManager {
 	//添加元素
 	public void addElement(BaseElement element) {
 		if(element!=null) {
-			getElementList().add(element);
+			getElements().add(element);
 		}
 	}
 	
 	//删除元素
 	public void remove(BaseElement element) {
 		if(element!=null) {
-			getElementList().remove(element);
+			getElements().remove(element);
 		}
 	}
 	
 	//查找元素
 	public void removeAt(int index) {
 		if(index<getSize()||index>=0) {
-			getElementList().remove(index);
+			getElements().remove(index);
 		}
 	}
 	
 	//清空元素
 	public void clear() {
 		if(getSize()!=0) {
-			getElementList().clear();
+			getElements().clear();
 		}
 	}
 	
@@ -139,9 +174,6 @@ public abstract class BaseElementManager {
 	//更新元素的方法
 	public abstract void update();
 	
-	public ArrayList<BaseElement> getElementList() {
-		return elementList;
-	}
 	public void setElementList(ArrayList<BaseElement> elementList) {
 		this.elementList = elementList;
 	}

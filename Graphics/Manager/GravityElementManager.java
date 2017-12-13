@@ -15,7 +15,7 @@ public class GravityElementManager extends BaseElementManager{
 	
 	
 	private void initialize() {
-		gravity=(float)0.1;
+		gravity=(float)0.06;
 		maxSpeed=100;
 	}
 	
@@ -58,13 +58,13 @@ public class GravityElementManager extends BaseElementManager{
 	 */
 	@Override
 	public void update() {
-		if(getElementList()==null){
+		if(getElements()==null){
 			return;
 		}
 		if(!isEnable()) {
 			return;
 		}
-		for(BaseElement e : getElementList()){
+		for(BaseElement e : getElements()){
 			GravityElement element=(GravityElement)e;
 			if(element.isGravity()&&!element.isOnFloor()){
 				int h=0;
@@ -73,6 +73,7 @@ public class GravityElementManager extends BaseElementManager{
 				}else{
 					element.setGravitySpeed(gravity*element.getDownTime());
 					element.downTimeAdd(getProcessTime());
+					//System.out.println(element.getGravitySpeed());
 				}
 				h=(int)(element.getGravitySpeed()+(gravity*element.getDownTime()));
 				element.y+=h;

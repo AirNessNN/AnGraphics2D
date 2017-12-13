@@ -1,5 +1,6 @@
 package HitCheck;
 
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import Element.BaseElement;
@@ -148,6 +149,15 @@ public class QuadNode {
 		returnObjects.addAll(elements);
 
 		return returnObjects;
+	}
+	
+	
+	
+	
+	
+	public ArrayList<BaseElement> search(Point point){
+		
+		return null;
 	}
 
 	

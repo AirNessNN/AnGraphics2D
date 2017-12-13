@@ -8,6 +8,8 @@ import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+import javax.swing.JFrame;
+
 import AcitonListener.BorderHitListener;
 import AcitonListener.ElementHitListener;
 import AcitonListener.UpdateListener;
@@ -69,12 +71,12 @@ public class HorizontalCanvas extends BaseCanvas{
 	
 	
 	
-	public HorizontalCanvas(Dimension size) {
-		super(size);
+	public HorizontalCanvas(JFrame context,Dimension size) {
+		super(context,size);
 		// TODO Auto-generated constructor stub
 	}
-	public HorizontalCanvas(int width, int height) {
-		super(width, height);
+	public HorizontalCanvas(JFrame context,int width, int height) {
+		super(context,width, height);
 		// TODO Auto-generated constructor stub
 	}
 	
@@ -128,7 +130,7 @@ public class HorizontalCanvas extends BaseCanvas{
 		//»æ»­ÔªËØ
 		if(getElementManagers()!=null&&getElementManagers().size()>0) {
 			for(BaseElementManager manager:getElementManagers()) {
-				for(BaseElement element:manager.getElementList()) {
+				for(BaseElement element:manager.getElements()) {
 					//±ß¿òÅö×²
 					if(isIsborderHit()) {
 						if(element.x<0) {
