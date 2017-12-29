@@ -1,6 +1,8 @@
 package Element;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.MouseInfo;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionListener;
 /**
@@ -33,11 +35,15 @@ public abstract class BaseElement {
 	/**是否背景元素*/
 	private boolean 								isBackgroundElement=false;
 	
+	private Color									color=Color.DARK_GRAY;
+	
 	private int										coveage=1;
 	
 	private String									tag;
-	
-	private BufferedImage						image;
+	//图像
+	private BufferedImage						currentImage;//当前帧的图像
+	private BufferedImage						finalImage;
+	private BufferedImage						backgroundImage;
 	private Graphics2D							graphics2d;
 	
 	//碰撞方面
@@ -45,6 +51,10 @@ public abstract class BaseElement {
 	
 	//移动
 	private int 										speed=0;//1秒钟移动的距离
+	private boolean 								canMouseMove=false;
+	public boolean								isPrese=false;
+	private int 										xRelative=0;
+	private int										yRelative=0;
 	
 	//事件
 	private int										mouseEnter=-1;
@@ -56,6 +66,20 @@ public abstract class BaseElement {
 	
 	
 	
+	//可以被鼠标移动
+	public boolean isCanMouseMove() {
+		return canMouseMove;
+	}
+	public void setCanMouseMove(boolean canMouseMove) {
+		this.canMouseMove = canMouseMove;
+	}
+	
+	public Color getColor() {
+		return color;
+	}
+	public void setColor(Color color) {
+		this.color = color;
+	}
 	
 	//鼠标进入
 	public int getMouseEnter() {
@@ -135,14 +159,18 @@ public abstract class BaseElement {
 
 	//图像属性
 	public BufferedImage getImage() {
-		if(image==null) {
-			image=new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+		if(backgroundImage==null) {
+			backgroundImage=new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);	
 		}
-		return image;
+		graphics2d=backgroundImage.createGraphics();
+		graphics2d.setColor(getColor());
+		graphics2d.fillRect(0, 0, width, height);
+		
+		return backgroundImage;
 	}
 	public void setImage(BufferedImage image) {
 		if(image!=null) {
-			this.image = image;
+			this.backgroundImage = image;
 			this.height=image.getHeight();
 			this.width=image.getWidth();
 		}
@@ -180,8 +208,8 @@ public abstract class BaseElement {
 		if(height>0)
 			this.height=height;
 		//初始化
-		image=new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-		graphics2d=image.createGraphics();
+		backgroundImage=new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+		graphics2d=backgroundImage.createGraphics();
 		graphics2d.setColor(Color.darkGray);
 		graphics2d.fillRect(0, 0, width, height);
 	}
@@ -191,7 +219,7 @@ public abstract class BaseElement {
 		if(image!=null) {
 			this.width=image.getWidth();
 			this.height=image.getHeight();
-			this.image=image;
+			this.backgroundImage=image;
 		}else {
 			throw new NullPointerException("图像不能为null");
 		}
@@ -208,6 +236,39 @@ public abstract class BaseElement {
 	 */
 	public Rectangle getRectangle(){
 		return new Rectangle((int)x, (int)y, width, height);
+	}
+	
+	
+	
+	/**
+	 * 通过X和Y坐标点判断该坐标点是否在元素内
+	 * @param x x坐标
+	 * @param y y坐标
+	 * @return 在内返回true
+	 */
+	public boolean isInElement(int x, int y) {
+		return (x > this.getX() && x < this.getX() + this.getWidth() && y > this.getY()
+				&& y < this.getY() + this.height);
+	}
+	
+	
+	
+	
+	
+	public void setMouseRelativeLocation() {
+		Point p=MouseInfo.getPointerInfo().getLocation();
+		xRelative=p.x-x;
+		yRelative=p.y-y;
+	}
+	public void clearMouseRelativeLocation() {
+		xRelative=yRelative=0;
+	}
+	
+	public int getXrelative() {
+		return xRelative;
+	}
+	public int getYrelative() {
+		return yRelative;
 	}
 	
 	

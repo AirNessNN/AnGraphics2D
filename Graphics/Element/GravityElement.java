@@ -53,6 +53,9 @@ public class GravityElement extends BaseElement{
 	}
 	public void setOnFloor(boolean b) {
 		isOnFloor=b;
+		if(!b) {
+			downTime=0;
+		}
 	}
 
 
@@ -61,7 +64,6 @@ public class GravityElement extends BaseElement{
 	}
 	public void setGravitySpeed(double value) {
 		gravitySpeed=value/100;
-		//System.out.println(context.getCanvasFPS());
 	}
 	
 	

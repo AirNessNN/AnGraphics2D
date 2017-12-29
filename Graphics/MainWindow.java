@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Toolkit;
@@ -66,7 +67,7 @@ public class MainWindow extends JFrame {
 				// TODO Auto-generated method stub
 				GravityElement element2=(GravityElement)element;
 				element2.y=getHeight()-element2.getHeight();
-				element2.setOnFloor(true);
+				//element2.setOnFloor(true);
 				
 				/*element.y=0;
 				element.x+=10;*/
@@ -89,12 +90,14 @@ public class MainWindow extends JFrame {
 			public void mouseAction(int mouseKeyi, MouseState state) {
 				// TODO Auto-generated method stub
 				if(state==MouseState.MousePress) {
-					System.out.println("µã»÷ÁË");
+					player.setColor(Color.blue);
 				}else {
-					System.out.println("ÊÍ·Å");
+					player.setColor(Color.red);
 				}
 			}
 		};
+		player.setCanMouseMove(true);
+		element.setCanMouseMove(true);
 		GEM.addElement(player);
 		GEM.addElement(element);
 		player.setGravity(true);

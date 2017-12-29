@@ -73,8 +73,10 @@ public class BaseCanvas extends Canvas{
 	private BaseElement											cameraLockObject;//相机锁定的对象
 	//鼠标相关
 	private boolean													isMouseListening=false;
+	
 	private int															mouseKey;
 	private int															isMousePress=-1;
+	
 	private int															lastMouseState=-1;
 	public static final int											MOUSE_LEFT_BUTTON=1;
 	public static final int 											MOUSE_WHEEL=2;
@@ -181,6 +183,24 @@ public class BaseCanvas extends Canvas{
 	}
 	public void setElementHit(boolean isElementHit) {
 		this.isElementHit = isElementHit;
+	}
+	
+	
+	
+	
+	
+	public int getIsMousePress() {
+		return isMousePress;
+	}
+	
+	
+	
+	
+	public boolean isMouseListening() {
+		return isMouseListening;
+	}
+	public void setMouseListening(boolean isMouseListening) {
+		this.isMouseListening = isMouseListening;
 	}
 	
 	
@@ -387,17 +407,25 @@ public class BaseCanvas extends Canvas{
 		quadTreeManager=new QuadTreeManager(getBounds(), allElements);
 	}
 	
-	private ArrayList<BaseElement> getClickElement(MouseEvent e,MouseState state) {
+	//每个设置了鼠标事件的元素遍历
+	private void getClickElement(MouseEvent e,MouseState state) {
 		for(BaseElementManager bem:elementManagers) {
 			for(BaseElement element:bem.getElements()) {
-				if(element.actionListener!=null) {
-					if(e.getX()<element.x+element.getWidth()&&e.getX()>element.getX()&&e.getY()<element.getY()+element.getHeight()&&e.getY()>element.getY()) {
+				if(element.isInElement(e.getX(), e.getY())) {
+					if(element.actionListener!=null) {
 						element.actionListener.mouseAction(e.getButton(), state);
+					}
+					if(state==MouseState.MousePress) {
+						element.isPrese=true;
+						element.setMouseRelativeLocation();
+					}
+					if(state==MouseState.MouseReleased) {
+						element.isPrese=false;
+						element.clearMouseRelativeLocation();
 					}
 				}
 			}
 		}
-		return null;
 	}
 	
 	
@@ -525,7 +553,7 @@ public class BaseCanvas extends Canvas{
 					if(I!=null) {
 						I.updatePerformed();
 					}
-					/*//检查鼠标事件
+					//检查鼠标事件
 					if(isMouseListening) {
 						if(isMousePress==1) {
 							//鼠标按下
@@ -534,13 +562,15 @@ public class BaseCanvas extends Canvas{
 						if(isMousePress==0) {
 							//鼠标放开
 						}
-					}*/
+						
+					}
 					//update元素
 					for(BaseElementManager m:elementManagers) {
 						m.update();
 					}
 					//重绘屏幕
 					repaint();
+					
 					
 					//动态设置FPS
 					setEndTime(System.currentTimeMillis());

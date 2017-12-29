@@ -1,4 +1,7 @@
 package Manager;
+import java.awt.MouseInfo;
+import java.awt.Point;
+import java.awt.Toolkit;
 import java.util.ArrayList;
 
 import BaseCanvas.BaseCanvas;
@@ -10,6 +13,7 @@ public class GravityElementManager extends BaseElementManager{
 	
 	private 				float 			gravity;//重力系数
 	private				int 				maxSpeed;
+	private				Toolkit			tool;
 	
 	
 	
@@ -17,6 +21,7 @@ public class GravityElementManager extends BaseElementManager{
 	private void initialize() {
 		gravity=(float)0.06;
 		maxSpeed=100;
+		tool=Toolkit.getDefaultToolkit();
 	}
 	
 	public GravityElementManager() {
@@ -66,18 +71,25 @@ public class GravityElementManager extends BaseElementManager{
 		}
 		for(BaseElement e : getElements()){
 			GravityElement element=(GravityElement)e;
-			if(element.isGravity()&&!element.isOnFloor()){
-				int h=0;
-				if((element.getGravitySpeed())>=maxSpeed){
-					element.setGravitySpeed(maxSpeed);
-				}else{
-					element.setGravitySpeed(gravity*element.getDownTime());
-					element.downTimeAdd(getProcessTime());
-					//System.out.println(element.getGravitySpeed());
+			if(getContext().isMouseListening()&& element.isCanMouseMove()&&e.isPrese) {
+				Point p=MouseInfo.getPointerInfo().getLocation();
+				e.x=p.x-e.getXrelative();
+				e.y=p.y-e.getYrelative();
+				element.setDownTime(0);
+			}else {
+				if(element.isGravity()&&!element.isOnFloor()){
+					int h=0;
+					if((element.getGravitySpeed())>=maxSpeed){
+						element.setGravitySpeed(maxSpeed);
+					}else{
+						element.setGravitySpeed(gravity*element.getDownTime());
+						element.downTimeAdd(getProcessTime());
+					}
+					h=(int)(element.getGravitySpeed()+(gravity*element.getDownTime()));
+					element.y+=h;
 				}
-				h=(int)(element.getGravitySpeed()+(gravity*element.getDownTime()));
-				element.y+=h;
 			}
+			
 		}
 	}
 	
