@@ -15,10 +15,12 @@ import javax.swing.JPanel;
 import javax.xml.crypto.Data;
 
 import AcitonListener.BorderHitListener;
+import AcitonListener.MouseActionListener;
 import AcitonListener.UpdateListener;
 import BaseCanvas.HorizontalCanvas;
 import Element.BaseElement;
 import Element.GravityElement;
+import Enum.MouseState;
 import Manager.GravityElementManager;
 import Window.BaseWindow;
 
@@ -75,6 +77,24 @@ public class MainWindow extends JFrame {
 		GEM=new GravityElementManager(canvas);
 		player=new Player(500, 0, 100, 300,GEM);
 		element=new GravityElement(200, 0, 100, 100,GEM);
+		player.actionListener=new MouseActionListener() {
+			
+			@Override
+			public void mouseWheelMove(int value) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseAction(int mouseKeyi, MouseState state) {
+				// TODO Auto-generated method stub
+				if(state==MouseState.MousePress) {
+					System.out.println("µã»÷ÁË");
+				}else {
+					System.out.println("ÊÍ·Å");
+				}
+			}
+		};
 		GEM.addElement(player);
 		GEM.addElement(element);
 		player.setGravity(true);
@@ -90,12 +110,12 @@ public class MainWindow extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				/*MainWindow mainWindow=new MainWindow();
+				MainWindow mainWindow=new MainWindow();
 				mainWindow.canvas.setMouseListener();
 				//mainWindow.canvas.removeMouseListener();
-				mainWindow.setVisible(true);*/
+				mainWindow.setVisible(true);
 				//new BaseWindow().setVisible(true);
-				new TestWindow().setVisible(true);
+				//new TestWindow().setVisible(true);
 			}
 		});
 	}

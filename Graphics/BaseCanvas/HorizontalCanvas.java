@@ -18,7 +18,7 @@ import Element.GravityElement;
 import Manager.*;
 
 /**
- * 自带画板类<br/>用于定义最基本的二维动画显示和各种元素控制器的接纳
+ * 水平画板，自带水平相机
  * @author AN
  *
  */

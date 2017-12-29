@@ -23,6 +23,7 @@ import AcitonListener.MouseActionListener;
 import AcitonListener.UpdateListener;
 import Element.BaseElement;
 import Element.GravityElement;
+import Enum.MouseState;
 import HitCheck.QuadTreeManager;
 import Manager.BaseElementManager;
 
@@ -51,6 +52,7 @@ public class BaseCanvas extends Canvas{
 	private Color 														defaultColor;//背景颜色
 	private Dimension 												backgroundSize;//背景大小
 	private Dimension												canvasSize;//控件大小
+	private double													unit=1f;
 	//任务相关
 	private boolean 													isEnable;
 	private boolean 													isRunning;
@@ -72,7 +74,8 @@ public class BaseCanvas extends Canvas{
 	//鼠标相关
 	private boolean													isMouseListening=false;
 	private int															mouseKey;
-	private boolean													isMousePress;
+	private int															isMousePress=-1;
+	private int															lastMouseState=-1;
 	public static final int											MOUSE_LEFT_BUTTON=1;
 	public static final int 											MOUSE_WHEEL=2;
 	public static final int											MOUSE_RIGHT_BUTTON=3;
@@ -83,6 +86,7 @@ public class BaseCanvas extends Canvas{
 	public MouseActionListener									mouseActionListener;
 	public BorderHitListener 										borderhitListener;
 	public ElementHitListener									elementHitListener;
+	
 	
 	
 	private QuadTreeManager									quadTreeManager;//四叉树管理器
@@ -101,14 +105,24 @@ public class BaseCanvas extends Canvas{
 		public void mouseReleased(MouseEvent e) {
 			// TODO Auto-generated method stub
 			mouseKey=e.getButton();
-			
+			lastMouseState=isMousePress;
+			isMousePress=0;
+			if(mouseActionListener!=null) {
+				mouseActionListener.mouseAction(mouseKey, MouseState.MouseReleased);
+			}
+			getClickElement(e, MouseState.MouseReleased);
 		}
 		
 		@Override
 		public void mousePressed(MouseEvent e) {
 			// TODO Auto-generated method stub
 			mouseKey=e.getButton();
-			
+			lastMouseState=isMousePress;
+			isMousePress=1;
+			if(mouseActionListener!=null) {
+				mouseActionListener.mouseAction(mouseKey, MouseState.MousePress);
+			}
+			getClickElement(e, MouseState.MousePress);
 		}
 		
 		@Override
@@ -320,12 +334,14 @@ public class BaseCanvas extends Canvas{
 	
 	//让管理器获取到当前的刷新时间
 	private void setStartTime(long time) {
-		
 		synchronized (timeLocker) {
-			//System.out.println("starttime:"+startTime);
 			startTime=time;
 		}
 	}
+	
+	
+	
+	
 	private void setEndTime(long time) {
 		synchronized (timeLocker) {
 			//System.out.println("endtime:"+endTime);
@@ -340,6 +356,14 @@ public class BaseCanvas extends Canvas{
 	}
 	
 	
+	
+	
+	public double getUnit() {
+		return unit;
+	}
+	public void setUnit(double unit) {
+		this.unit = unit;
+	}
 	
 	
 	
@@ -363,7 +387,18 @@ public class BaseCanvas extends Canvas{
 		quadTreeManager=new QuadTreeManager(getBounds(), allElements);
 	}
 	
-	
+	private ArrayList<BaseElement> getClickElement(MouseEvent e,MouseState state) {
+		for(BaseElementManager bem:elementManagers) {
+			for(BaseElement element:bem.getElements()) {
+				if(element.actionListener!=null) {
+					if(e.getX()<element.x+element.getWidth()&&e.getX()>element.getX()&&e.getY()<element.getY()+element.getHeight()&&e.getY()>element.getY()) {
+						element.actionListener.mouseAction(e.getButton(), state);
+					}
+				}
+			}
+		}
+		return null;
+	}
 	
 	
 	
@@ -490,10 +525,16 @@ public class BaseCanvas extends Canvas{
 					if(I!=null) {
 						I.updatePerformed();
 					}
-					//检查鼠标事件
+					/*//检查鼠标事件
 					if(isMouseListening) {
-						
-					}
+						if(isMousePress==1) {
+							//鼠标按下
+							
+						}
+						if(isMousePress==0) {
+							//鼠标放开
+						}
+					}*/
 					//update元素
 					for(BaseElementManager m:elementManagers) {
 						m.update();

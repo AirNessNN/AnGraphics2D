@@ -12,8 +12,12 @@ import javax.swing.JFrame;
 import Element.BaseElement;
 import Element.GravityElement;
 import Manager.BaseElementManager;
-
-public class VerticalCanvas extends BaseCanvas{
+/**
+ * 顶视图画板，内建相机为顶视图（从上往下看）
+ * @author AN
+ *
+ */
+public class TopViewCanvas extends BaseCanvas{
 
 	
 
@@ -66,12 +70,12 @@ public class VerticalCanvas extends BaseCanvas{
 	
 	
 	
-	public VerticalCanvas(JFrame context,int width, int height) {
+	public TopViewCanvas(JFrame context,int width, int height) {
 		super(context,width, height);
 		
 		// TODO Auto-generated constructor stub
 	}
-	public VerticalCanvas(JFrame context,Dimension size) {
+	public TopViewCanvas(JFrame context,Dimension size) {
 		super(context,size);
 		// TODO Auto-generated constructor stub
 		this.cameraPosition=new Point(0, 0);

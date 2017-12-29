@@ -2,6 +2,7 @@ package Element;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.event.ActionListener;
 /**
  * 
  * 
@@ -10,6 +11,8 @@ import java.awt.Rectangle;
  *
  */
 import java.awt.image.BufferedImage;
+
+import AcitonListener.MouseActionListener;
 public abstract class BaseElement {
 	
 	public static final int NO_MODEL=0;
@@ -41,7 +44,12 @@ public abstract class BaseElement {
 	public int 										hitModel=0;
 	
 	//移动
-	private int 										speed=0;//60帧下（16ms）内移动的距离
+	private int 										speed=0;//1秒钟移动的距离
+	
+	//事件
+	private int										mouseEnter=-1;
+	
+	public MouseActionListener				actionListener=null;
 	
 	
 	
@@ -49,8 +57,13 @@ public abstract class BaseElement {
 	
 	
 	
-	
-	
+	//鼠标进入
+	public int getMouseEnter() {
+		return mouseEnter;
+	}
+	public void setMouseEnter(int mouseEnter) {
+		this.mouseEnter = mouseEnter;
+	}
 	
 	//图层
 	public int getCoveage() {
