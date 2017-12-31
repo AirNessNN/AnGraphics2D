@@ -12,17 +12,13 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-
 import javax.swing.JFrame;
-
-import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
-
 import AcitonListener.BorderHitListener;
 import AcitonListener.ElementHitListener;
 import AcitonListener.MouseActionListener;
 import AcitonListener.UpdateListener;
 import Element.BaseElement;
-import Element.GravityElement;
+import Enum.BorderHitlState;
 import Enum.MouseState;
 import HitCheck.QuadTreeManager;
 import Manager.BaseElementManager;
@@ -53,6 +49,7 @@ public class BaseCanvas extends Canvas{
 	private Dimension 												backgroundSize;//背景大小
 	private Dimension												canvasSize;//控件大小
 	private double													unit=1f;
+	private ArrayList<BaseElement>							totalElement;
 	//任务相关
 	private boolean 													isEnable;
 	private boolean 													isRunning;
@@ -416,13 +413,16 @@ public class BaseCanvas extends Canvas{
 						element.actionListener.mouseAction(e.getButton(), state);
 					}
 					if(state==MouseState.MousePress) {
-						element.isPrese=true;
+						element.setPressState(true);
 						element.setMouseRelativeLocation();
 					}
 					if(state==MouseState.MouseReleased) {
-						element.isPrese=false;
+						element.setPressState(false);
 						element.clearMouseRelativeLocation();
 					}
+				}
+				if(element.getPressState()&&!element.isInElement(e.getX(), e.getY())) {
+					element.actionListener.mouseAction(e.getButton(), MouseState.MouseReleased);
 				}
 			}
 		}
@@ -682,16 +682,16 @@ public class BaseCanvas extends Canvas{
 					//边框碰撞
 					if(isborderHit) {
 						if(element.x<0) {
-							borderhitListener.onHit(element,2);
+							borderhitListener.onHit(element,BorderHitlState.LEFT);
 						}
 						if(element.x+element.getWidth()>this.getWidth()) {
-							borderhitListener.onHit(element,4);
+							borderhitListener.onHit(element,BorderHitlState.RIGHT);
 						}
 						if(element.y<0) {
-							borderhitListener.onHit(element,1);
+							borderhitListener.onHit(element,BorderHitlState.TOP);
 						}
 						if(element.y+element.getHeight()>this.getHeight()) {
-							borderhitListener.onHit(element,3);
+							borderhitListener.onHit(element,BorderHitlState.BOTTOM);
 						}
 						//边框元素碰撞
 						for(BaseElement e:wall){

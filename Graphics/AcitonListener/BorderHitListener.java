@@ -1,6 +1,7 @@
 package AcitonListener;
 
 import Element.BaseElement;
+import Enum.BorderHitlState;
 
 public interface BorderHitListener {
 	public static final int TOP=1;
@@ -10,6 +11,6 @@ public interface BorderHitListener {
 	
 	
 	
-	public void onHit(BaseElement element,int hitMode);
+	public void onHit(BaseElement element,BorderHitlState hitMode);
 
 }

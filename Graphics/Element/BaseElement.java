@@ -55,11 +55,12 @@ public abstract class BaseElement {
 	public boolean								isPrese=false;
 	private int 										xRelative=0;
 	private int										yRelative=0;
-	
+	private Object 								pressLock=new Object();
 	//ÊÂ¼þ
 	private int										mouseEnter=-1;
 	
 	public MouseActionListener				actionListener=null;
+	
 	
 	
 	
@@ -269,6 +270,17 @@ public abstract class BaseElement {
 	}
 	public int getYrelative() {
 		return yRelative;
+	}
+	
+	public boolean getPressState() {
+		synchronized (pressLock) {
+			return isPrese;
+		}
+	}
+	public void setPressState(boolean b) {
+		synchronized (pressLock) {
+			isPrese=b;
+		}
 	}
 	
 	

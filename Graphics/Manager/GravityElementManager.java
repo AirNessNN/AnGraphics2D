@@ -71,7 +71,7 @@ public class GravityElementManager extends BaseElementManager{
 		}
 		for(BaseElement e : getElements()){
 			GravityElement element=(GravityElement)e;
-			if(getContext().isMouseListening()&& element.isCanMouseMove()&&e.isPrese) {
+			if(getContext().isMouseListening()&& element.isCanMouseMove()&&e.getPressState()) {
 				Point p=MouseInfo.getPointerInfo().getLocation();
 				e.x=p.x-e.getXrelative();
 				e.y=p.y-e.getYrelative();

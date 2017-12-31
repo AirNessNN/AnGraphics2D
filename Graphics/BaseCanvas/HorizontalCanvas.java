@@ -15,6 +15,7 @@ import AcitonListener.ElementHitListener;
 import AcitonListener.UpdateListener;
 import Element.BaseElement;
 import Element.GravityElement;
+import Enum.BorderHitlState;
 import Manager.*;
 
 /**
@@ -134,16 +135,16 @@ public class HorizontalCanvas extends BaseCanvas{
 					//±ß¿òÅö×²
 					if(isIsborderHit()) {
 						if(element.x<0) {
-							borderhitListener.onHit(element,2);
+							borderhitListener.onHit(element,BorderHitlState.LEFT);
 						}
 						if(element.x+element.getWidth()>this.getWidth()) {
-							borderhitListener.onHit(element,4);
+							borderhitListener.onHit(element,BorderHitlState.RIGHT);
 						}
 						if(element.y<0) {
-							borderhitListener.onHit(element,1);
+							borderhitListener.onHit(element,BorderHitlState.TOP);
 						}
 						if(element.y+element.getHeight()>this.getHeight()) {
-							borderhitListener.onHit(element,3);
+							borderhitListener.onHit(element,BorderHitlState.BOTTOM);
 						}
 						//±ß¿òÔªËØÅö×²
 						for(BaseElement e:getWall()){

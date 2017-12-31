@@ -21,6 +21,7 @@ import AcitonListener.UpdateListener;
 import BaseCanvas.HorizontalCanvas;
 import Element.BaseElement;
 import Element.GravityElement;
+import Enum.BorderHitlState;
 import Enum.MouseState;
 import Manager.GravityElementManager;
 import Window.BaseWindow;
@@ -63,16 +64,18 @@ public class MainWindow extends JFrame {
 		canvas.setIsborderHit(new BorderHitListener() {
 			
 			@Override
-			public void onHit(BaseElement element,int model) {
+			public void onHit(BaseElement element,BorderHitlState model) {
 				// TODO Auto-generated method stub
-				GravityElement element2=(GravityElement)element;
-				element2.y=getHeight()-element2.getHeight();
+				if(model==BorderHitlState.BOTTOM) {
+					GravityElement element2=(GravityElement)element;
+					element2.y=getHeight()-element2.getHeight();
+				}
 				//element2.setOnFloor(true);
 				
 				/*element.y=0;
 				element.x+=10;*/
-				end=System.currentTimeMillis();
-				System.out.println(end-start);
+				//end=System.currentTimeMillis();
+				//System.out.println(end-start);
 			}
 		});
 		GEM=new GravityElementManager(canvas);
@@ -96,7 +99,7 @@ public class MainWindow extends JFrame {
 				}
 			}
 		};
-		player.setCanMouseMove(true);
+		player.setCanMouseMove(false);
 		element.setCanMouseMove(true);
 		GEM.addElement(player);
 		GEM.addElement(element);
