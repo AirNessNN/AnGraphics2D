@@ -141,6 +141,7 @@ public class BaseCanvas extends Canvas{
 			// TODO Auto-generated method stub
 		}
 	};
+	
 	//¼üÅÌ¼àÌı
 	private KeyListener keyListener=new KeyListener() {
 		
