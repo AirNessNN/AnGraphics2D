@@ -3,6 +3,11 @@ package AcitonListener;
 import Element.BaseElement;
 import Enum.BorderHitlState;
 
+/**
+ * 
+ * @author AN
+ *
+ */
 public interface BorderHitListener {
 	public static final int TOP=1;
 	public static final int LEFT=2;

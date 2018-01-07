@@ -12,6 +12,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Collections;
+
 import javax.swing.JFrame;
 import AcitonListener.BorderHitListener;
 import AcitonListener.ElementHitListener;
@@ -41,7 +43,6 @@ public class BaseCanvas extends Canvas{
 	 */
 	private ArrayList<BaseElementManager>			elementManagers;//元素管理器
 	private ArrayList<BaseElement>							wall;//属于背景墙的元素
-	private ArrayList<BaseElement>							allElements;
 	//属性
 	private JFrame														context;
 	private BufferedImage 										backgroundImage;//背景
@@ -49,7 +50,7 @@ public class BaseCanvas extends Canvas{
 	private Dimension 												backgroundSize;//背景大小
 	private Dimension												canvasSize;//控件大小
 	private double													unit=1f;
-	private ArrayList<BaseElement>							totalElement;
+	private ArrayList<BaseElement>							totalElement;//用于渲染总和的元素
 	//任务相关
 	private boolean 													isEnable;
 	private boolean 													isRunning;
@@ -85,10 +86,16 @@ public class BaseCanvas extends Canvas{
 	public MouseActionListener									mouseActionListener;
 	public BorderHitListener 										borderhitListener;
 	public ElementHitListener									elementHitListener;
-	
+	public ElementControl											elementControl;
 	
 	
 	private QuadTreeManager									quadTreeManager;//四叉树管理器
+	
+	
+	public interface ElementControl{
+		public void addElement(BaseElement element);
+		public void removeElement(BaseElement element);
+	}
 	
 	
 	
@@ -181,6 +188,17 @@ public class BaseCanvas extends Canvas{
 	}
 	public void setElementHit(boolean isElementHit) {
 		this.isElementHit = isElementHit;
+	}
+	
+	
+	
+	
+	
+	public ArrayList<BaseElement> getTotalElements(){
+		return totalElement;
+	}
+	protected void setTotalElements() {
+		
 	}
 	
 	
@@ -401,30 +419,63 @@ public class BaseCanvas extends Canvas{
 		isRunning=false;
 		timeLocker=new Object();
 		defaultColor=Color.LIGHT_GRAY;
-		allElements=new ArrayList<>();
-		quadTreeManager=new QuadTreeManager(getBounds(), allElements);
+		totalElement=new ArrayList<>();
+		quadTreeManager=new QuadTreeManager(getBounds(), totalElement);
+		
+		/*
+		 * 元素控制接口用于为画板类的监听遍历提供图层支持，元素的点击事件和绘制是有顺序的
+		 * 因此在Canvas中用一个Arraylist托管所有BaseElement，维护一个从小到大的数组，
+		 * 在元素的绘制和焦点中起到很大的作用
+		 */
+		elementControl=new ElementControl() {
+
+			@Override
+			public void addElement(BaseElement element) {
+				// TODO Auto-generated method stub
+				if(totalElement!=null) {
+					totalElement.add(element);
+					Collections.sort(totalElement);
+				}
+			}
+
+			@Override
+			public void removeElement(BaseElement element) {
+				// TODO Auto-generated method stub
+				if(totalElement!=null) {
+					totalElement.remove(element);
+					Collections.sort(totalElement);
+				}
+			}
+			
+		};
 	}
 	
 	//每个设置了鼠标事件的元素遍历
 	private void getClickElement(MouseEvent e,MouseState state) {
-		for(BaseElementManager bem:elementManagers) {
-			for(BaseElement element:bem.getElements()) {
-				if(element.isInElement(e.getX(), e.getY())) {
-					if(element.actionListener!=null) {
-						element.actionListener.mouseAction(e.getButton(), state);
-					}
-					if(state==MouseState.MousePress) {
-						element.setPressState(true);
-						element.setMouseRelativeLocation();
-					}
-					if(state==MouseState.MouseReleased) {
-						element.setPressState(false);
-						element.clearMouseRelativeLocation();
-					}
+		boolean findElement=false;
+		for(BaseElement element:totalElement) {
+			if(element.isInElement(e.getX(), e.getY())) {
+				if(element.actionListener!=null) {
+					element.actionListener.mouseAction(e.getButton(), state);
 				}
-				if(element.getPressState()&&!element.isInElement(e.getX(), e.getY())) {
-					element.actionListener.mouseAction(e.getButton(), MouseState.MouseReleased);
+				if(state==MouseState.MousePress) {
+					element.setPressState(true);
+					element.setMouseRelativeLocation();
+					findElement=true;
 				}
+				if(state==MouseState.MouseReleased) {
+					element.setPressState(false);
+					element.clearMouseRelativeLocation();
+					findElement=true;
+				}
+			}
+			if(element.getPressState()&&!element.isInElement(e.getX(), e.getY())) {
+				element.actionListener.mouseAction(e.getButton(), MouseState.MouseReleased);
+				findElement=true;
+			}
+			if(findElement) {
+				System.out.println(element.getCoveage());
+				break;
 			}
 		}
 	}
@@ -474,7 +525,8 @@ public class BaseCanvas extends Canvas{
 	public void addManager(BaseElementManager manager) {
 		if(manager!=null) {
 			this.elementManagers.add(manager);
-			allElements.addAll(manager.getElements());
+			totalElement.addAll(manager.getElements());
+			Collections.sort(totalElement);
 		}
 	}
 	
@@ -484,6 +536,10 @@ public class BaseCanvas extends Canvas{
 	public void removeManager(BaseElementManager manager) {
 		if(manager!=null) {
 			this.elementManagers.remove(manager);
+			for(BaseElement element:manager.getElements()) {
+				this.totalElement.remove(element);
+			}
+			Collections.sort(totalElement);
 		}
 	}
 	

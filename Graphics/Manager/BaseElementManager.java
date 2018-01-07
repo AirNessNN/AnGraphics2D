@@ -9,7 +9,7 @@ public abstract class BaseElementManager {
 	//属性
 	private 		ArrayList<BaseElement>							elementList;				//元素列表
 	private 		boolean 													isEnable;					//可用状态
-	private 		int 															maxCoverage=1;//最大图层数
+	private 		int 															maxCoverage=10;//最大图层数
 	
 	private 		BaseCanvas	 											context;
 	
@@ -146,6 +146,9 @@ public abstract class BaseElementManager {
 		if(element!=null) {
 			getElements().add(element);
 		}
+		if(context!=null) {
+			context.elementControl.addElement(element);
+		}
 	}
 	
 	//删除元素
@@ -153,10 +156,16 @@ public abstract class BaseElementManager {
 		if(element!=null) {
 			getElements().remove(element);
 		}
+		if(context!=null) {
+			context.elementControl.removeElement(element);
+		}
 	}
 	
 	//查找元素
 	public void removeAt(int index) {
+		if(context!=null) {
+			context.elementControl.removeElement(getElements().get(index));
+		}
 		if(index<getSize()||index>=0) {
 			getElements().remove(index);
 		}
@@ -164,9 +173,15 @@ public abstract class BaseElementManager {
 	
 	//清空元素
 	public void clear() {
+		if(context!=null) {
+			for(BaseElement e : this.elementList) {
+				context.elementControl.removeElement(e);
+			}
+		}
 		if(getSize()!=0) {
 			getElements().clear();
 		}
+		
 	}
 	
 	

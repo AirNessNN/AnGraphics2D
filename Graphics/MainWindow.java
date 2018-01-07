@@ -2,29 +2,15 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Toolkit;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.util.Date;
-
-import javax.imageio.ImageIO;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.xml.crypto.Data;
-
 import AcitonListener.BorderHitListener;
 import AcitonListener.MouseActionListener;
-import AcitonListener.UpdateListener;
 import BaseCanvas.HorizontalCanvas;
 import Element.BaseElement;
 import Element.GravityElement;
 import Enum.BorderHitlState;
 import Enum.MouseState;
 import Manager.GravityElementManager;
-import Window.BaseWindow;
 
 public class MainWindow extends JFrame {
 
@@ -81,6 +67,8 @@ public class MainWindow extends JFrame {
 		GEM=new GravityElementManager(canvas);
 		player=new Player(500, 0, 100, 300,GEM);
 		element=new GravityElement(200, 0, 100, 100,GEM);
+		player.setCoveage(1);
+		element.setCoveage(2);
 		player.actionListener=new MouseActionListener() {
 			
 			@Override

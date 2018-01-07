@@ -4,7 +4,6 @@ import java.awt.Graphics2D;
 import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.event.ActionListener;
 /**
  * 
  * 
@@ -15,7 +14,7 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 
 import AcitonListener.MouseActionListener;
-public abstract class BaseElement {
+public abstract class BaseElement implements Comparable<BaseElement>{
 	
 	public static final int NO_MODEL=0;
 	public static final int RECTANGLE=1;
@@ -37,7 +36,7 @@ public abstract class BaseElement {
 	
 	private Color									color=Color.DARK_GRAY;
 	
-	private int										coveage=1;
+	private int										coveage=1;//Í¼²ã
 	
 	private String									tag;
 	//Í¼Ïñ
@@ -162,10 +161,11 @@ public abstract class BaseElement {
 	public BufferedImage getImage() {
 		if(backgroundImage==null) {
 			backgroundImage=new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);	
+			graphics2d=backgroundImage.createGraphics();
+			graphics2d.setColor(getColor());
+			graphics2d.fillRect(0, 0, width, height);
 		}
-		graphics2d=backgroundImage.createGraphics();
-		graphics2d.setColor(getColor());
-		graphics2d.fillRect(0, 0, width, height);
+		
 		
 		return backgroundImage;
 	}
@@ -318,6 +318,18 @@ public abstract class BaseElement {
 			return false;
 		}
 		return false;
+	}
+	
+	@Override
+	public int compareTo(BaseElement o) {
+		// TODO Auto-generated method stub
+		if(this.coveage>o.coveage) {
+			return 1;
+		}
+		if(this.coveage==o.coveage) {
+			return 0;
+		}
+		return -1;
 	}
 	
 

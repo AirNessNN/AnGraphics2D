@@ -1,20 +1,11 @@
 package BaseCanvas;
-import java.awt.Canvas;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-
 import javax.swing.JFrame;
 
-import AcitonListener.BorderHitListener;
-import AcitonListener.ElementHitListener;
-import AcitonListener.UpdateListener;
 import Element.BaseElement;
-import Element.GravityElement;
 import Enum.BorderHitlState;
 import Manager.*;
 
@@ -130,38 +121,37 @@ public class HorizontalCanvas extends BaseCanvas{
 		
 		//»æ»­ÔªËØ
 		if(getElementManagers()!=null&&getElementManagers().size()>0) {
-			for(BaseElementManager manager:getElementManagers()) {
-				for(BaseElement element:manager.getElements()) {
-					//±ß¿òÅö×²
-					if(isIsborderHit()) {
-						if(element.x<0) {
-							borderhitListener.onHit(element,BorderHitlState.LEFT);
-						}
-						if(element.x+element.getWidth()>this.getWidth()) {
-							borderhitListener.onHit(element,BorderHitlState.RIGHT);
-						}
-						if(element.y<0) {
-							borderhitListener.onHit(element,BorderHitlState.TOP);
-						}
-						if(element.y+element.getHeight()>this.getHeight()) {
-							borderhitListener.onHit(element,BorderHitlState.BOTTOM);
-						}
-						//±ß¿òÔªËØÅö×²
-						for(BaseElement e:getWall()){
-							if(element.CheckHitTo(e)) {
-								if(elementHitListener!=null) {
-									elementHitListener.onHit(element, e);
-								}
+			
+			for(BaseElement element : getTotalElements()) {
+				//±ß¿òÅö×²
+				if(isIsborderHit()) {
+					if(element.x<0) {
+						borderhitListener.onHit(element,BorderHitlState.LEFT);
+					}
+					if(element.x+element.getWidth()>this.getWidth()) {
+						borderhitListener.onHit(element,BorderHitlState.RIGHT);
+					}
+					if(element.y<0) {
+						borderhitListener.onHit(element,BorderHitlState.TOP);
+					}
+					if(element.y+element.getHeight()>this.getHeight()) {
+						borderhitListener.onHit(element,BorderHitlState.BOTTOM);
+					}
+					//±ß¿òÔªËØÅö×²
+					for(BaseElement e:getWall()){
+						if(element.CheckHitTo(e)) {
+							if(elementHitListener!=null) {
+								elementHitListener.onHit(element, e);
 							}
 						}
 					}
-					//ÔªËØÅö×²
-					if(true) {
-						//================================================
-					}
-					//Ìî³ä»º³åÖ¡
-					g2d.drawImage(element.getImage(), element.x, element.y, null);
 				}
+				//ÔªËØÅö×²
+				if(true) {
+					//================================================
+				}
+				//Ìî³ä»º³åÖ¡
+				g2d.drawImage(element.getImage(), element.x, element.y, null);
 			}
 		}
 		//Ïú»Ù»­±Ê

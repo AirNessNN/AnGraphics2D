@@ -5,12 +5,9 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-
 import javax.swing.JFrame;
 
 import Element.BaseElement;
-import Element.GravityElement;
 import Manager.BaseElementManager;
 /**
  * 顶视图画板，内建相机为顶视图（从上往下看）

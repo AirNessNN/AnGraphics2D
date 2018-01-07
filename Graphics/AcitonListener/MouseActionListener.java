@@ -1,8 +1,5 @@
 package AcitonListener;
 
-import java.awt.event.MouseEvent;
-
-import Element.BaseElement;
 import Enum.MouseState;
 
 public interface MouseActionListener {
