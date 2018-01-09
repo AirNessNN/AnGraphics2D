@@ -3,14 +3,15 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Toolkit;
 import javax.swing.JFrame;
-import AcitonListener.BorderHitListener;
-import AcitonListener.MouseActionListener;
-import BaseCanvas.HorizontalCanvas;
-import Element.BaseElement;
-import Element.GravityElement;
-import Enum.BorderHitlState;
-import Enum.MouseState;
-import Manager.GravityElementManager;
+
+import Graphics.BaseElement;
+import Graphics.BorderHitListener;
+import Graphics.BorderHitlState;
+import Graphics.GravityElement;
+import Graphics.GravityElementManager;
+import Graphics.HorizontalCanvas;
+import Graphics.MouseActionListener;
+import Graphics.MouseState;
 
 public class MainWindow extends JFrame {
 
@@ -53,7 +54,7 @@ public class MainWindow extends JFrame {
 			public void onHit(BaseElement element,BorderHitlState model) {
 				// TODO Auto-generated method stub
 				if(model==BorderHitlState.BOTTOM) {
-					GravityElement element2=(GravityElement)element;
+					Graphics.GravityElement element2=(GravityElement)element;
 					element2.y=getHeight()-element2.getHeight();
 				}
 				//element2.setOnFloor(true);

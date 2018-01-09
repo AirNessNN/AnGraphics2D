@@ -1,4 +1,4 @@
-import Window.BaseWindow;
+import Graphics.BaseWindow;
 
 public class TestWindow extends BaseWindow{
 	

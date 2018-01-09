@@ -2,8 +2,8 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
-import Element.GravityElement;
-import Manager.GravityElementManager;
+import Graphics.GravityElement;
+import Graphics.GravityElementManager;
 
 public class Player extends GravityElement{
 	
